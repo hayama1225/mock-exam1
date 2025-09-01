@@ -1,0 +1,73 @@
+/* items.css : 商品詳細ページ専用 */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 8px 0 16px 0;
+}
+
+.action {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+.action .icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.action .count {
+    margin-top: 2px;
+    font-size: 11px;
+    line-height: 1;
+    color: #999;
+}
+
+/* ボタン素の見た目に */
+.action-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.action-button:focus {
+    outline: 2px solid #e5e5e5;
+    outline-offset: 2px;
+}
+
+/* ちょっとしたホバー */
+.action:hover .icon {
+    filter: brightness(0.85);
+}
+
+/* --- コメントフォームを1カラム左寄せに補正（ログイン後のみ表示） --- */
+.detail .form {
+    margin: 0;
+    padding: 0;
+    display: block;
+    /* 念のため 2カラム化を無効化 */
+}
+
+/* 共通フォームの「ラベル分の左マージン」を打ち消す */
+.detail .form .input,
+.detail .form .form-actions,
+.detail .form .error {
+    margin-left: 0 !important;
+}
+
+/* テキストエリアは横幅を自然に広げる */
+.detail .form textarea.input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 送信ボタンは左寄せのまま */
+.detail .form .form-actions {
+    margin-top: 8px;
+    text-align: left;
+}

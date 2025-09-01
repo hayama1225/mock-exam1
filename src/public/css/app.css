@@ -1,0 +1,132 @@
+/* ========== Tabs (画面共通UIだけど見た目調整が多いのでapp側) ========== */
+.tabs {
+    display: flex;
+    gap: 24px;
+    margin: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+}
+
+.tab-link {
+    color: #6b7280;
+    padding-bottom: 6px;
+}
+
+.tab-link.active {
+    color: #ef4444;
+    font-weight: 700;
+    border-bottom: 2px solid #ef4444;
+}
+
+/* ========== Cards（一覧・マイページで使用） ========== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+}
+
+.card-image {
+    aspect-ratio: 1 / 1;
+    background: #f3f4f6;
+}
+
+.card-name {
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+.badge-sold {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+/* ========== Like ボタン（カード/詳細で使用） ========== */
+.like {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #111;
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.like:hover {
+    opacity: .9;
+}
+
+.like.liked {
+    background: #fff7cc;
+    border-color: #f7e08e;
+    font-weight: 700;
+}
+
+/* ========== Detail Page ========== */
+.detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.product-image {
+    position: relative;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    display: inline-block;
+    border: 1px solid #ddd;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.comment {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+}
+
+.comment-meta {
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+/* ========== Responsive (PC幅 1400–1540px 重視) ========== */
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .detail {
+        grid-template-columns: 1fr;
+    }
+}

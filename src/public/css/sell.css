@@ -1,0 +1,132 @@
+/* sell.css : /sell（商品の出品）専用 */
+
+/* 見出し */
+.sell-title {
+    text-align: center;
+    margin: 0 0 16px 0;
+}
+
+.sell-subtitle {
+    margin: 24px 0 8px;
+    font-weight: 700;
+}
+
+/* 画像アップロード枠（中央寄せ／ボタンは赤枠・赤文字） */
+.image-uploader {
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    min-height: 140px;
+    max-width: 520px;
+    margin: 8px auto 16px;
+    /* ←中央寄せ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-button {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* カテゴリー：赤枠・赤文字、選択時は赤塗り白文字 */
+.chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-block;
+}
+
+.chip input {
+    display: none;
+}
+
+.chip span {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    border-radius: 999px;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    background: #fff;
+}
+
+.chip input:checked+span {
+    background: #ff6b6b;
+    color: #fff;
+    border-color: #ff6b6b;
+}
+
+/* 出品フォーム内だけに作用する軽い整形 */
+.sell-form .form-actions {
+    text-align: center;
+}
+
+.sell-form .form-row>label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* --- 出品ページだけで共通 .chip の灰枠を無効化 --- */
+.sell-form .chip {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    outline: none !important;
+}
+
+/* --- 価格プレースホルダー「￥」を黒に --- */
+.sell-form input[name="price"]::placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+/* ベンダープレフィックス（保険） */
+.sell-form input[name="price"]::-webkit-input-placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+.sell-form input[name="price"]::-moz-placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+.sell-form input[name="price"]:-ms-input-placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+.sell-form input[name="price"]::-ms-input-placeholder {
+    color: #000;
+    opacity: 1;
+}
+
+/* プレビューを画像選択ボタンの左に表示 */
+.image-uploader {
+    gap: 12px;
+}
+
+.image-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    display: none;
+}
