@@ -8,7 +8,8 @@ use App\Http\Controllers\{
     CommentController,
     PurchaseController,
     MypageController,
-    TempUploadController #一時アップ用(出品画面バリデーション後に選択画像維持)
+    TempUploadController, #一時アップ用(出品画面バリデーション後に選択画像維持)
+    CheckoutController
 };
 
 /*
@@ -82,7 +83,13 @@ Route::middleware(['auth', 'verified', 'force.profile'])->group(function () {
     // 一時アップロード
     Route::post('/upload/tmp', [TempUploadController::class, 'store'])
         ->name('upload.tmp');
+
+    // POST だけは保護されたままでOK
+    Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
 });
+// ここは従来どおり公開ルート群
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel',  [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 // （任意）古い /home リンク対策
 // Route::redirect('/home', '/')->name('home.redirect');

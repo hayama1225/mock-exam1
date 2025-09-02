@@ -20,8 +20,11 @@
     </div>
 
     <div>
-        <form method="POST" action="{{ route('purchase.submit',$item) }}">
+        <form method="POST" action="{{ route('checkout.create') }}">
             @csrf
+            {{-- Stripeへ渡す最小セット --}}
+            <input type="hidden" name="item_id" value="{{ $item->id }}">
+            <input type="hidden" name="quantity" value="1">
 
             <h3 class="section-title">配送先</h3>
             @php
@@ -49,19 +52,20 @@
 
             <h3 class="section-title">支払い方法</h3>
             <label style="display:block;margin-bottom:6px">
-                <input type="radio" name="payment_method" value="konbini" {{ old('payment_method')==='konbini' ? 'checked' : '' }}>
+                <input type="radio" name="pay_method" value="konbini" {{ old('pay_method')==='konbini' ? 'checked' : '' }}>
                 コンビニ支払い
             </label>
             <label style="display:block;margin-bottom:6px">
-                <input type="radio" name="payment_method" value="card" {{ old('payment_method','card')==='card' ? 'checked' : '' }}>
+                <input type="radio" name="pay_method" value="card" {{ old('pay_method','card')==='card' ? 'checked' : '' }}>
                 カード支払い
             </label>
-            @error('payment_method')<div class="error">{{ $message }}</div>@enderror
+            @error('pay_method')<div class="error">{{ $message }}</div>@enderror
 
             <div style="margin-top:16px">
                 <button class="btn" type="submit">購入する</button>
             </div>
         </form>
+
     </div>
 </div>
 @endsection
