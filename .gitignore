@@ -2,3 +2,7 @@ docker/mysql/data/
 docker/mysql/logs/
 docker/mysql/tmp/
 docker/mysql/**/
+
+# Local artifacts
+*.tar.gz
+stripe_*.tar.gz
