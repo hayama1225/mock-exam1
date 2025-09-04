@@ -67,14 +67,16 @@ erDiagram
     string email
     string password
     timestamp email_verified_at
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   profiles {
     bigint id PK
     bigint user_id FK
     string avatar_path
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   items {
@@ -86,27 +88,31 @@ erDiagram
     integer price
     string condition
     string image_path
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   categories {
     bigint id PK
     string name
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   category_item {
     bigint id PK
     bigint category_id FK
     bigint item_id FK
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   likes {
     bigint id PK
     bigint user_id FK
     bigint item_id FK
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   comments {
@@ -114,7 +120,8 @@ erDiagram
     bigint user_id FK
     bigint item_id FK
     text body
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   purchases {
@@ -122,7 +129,8 @@ erDiagram
     bigint user_id FK
     bigint item_id FK
     string address
-    timestamps
+    timestamp created_at
+    timestamp updated_at
   }
 
   users ||--|| profiles : has_one
