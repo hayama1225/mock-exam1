@@ -28,6 +28,7 @@ class ItemSeeder extends Seeder
         DB::table('likes')->truncate();
         DB::table('comments')->truncate();
         DB::table('category_item')->truncate();
+        DB::table('purchases')->truncate(); // ← 追加：購入を先に空に
         DB::table('items')->truncate();
         Schema::enableForeignKeyConstraints();
 
@@ -130,7 +131,7 @@ class ItemSeeder extends Seeder
                 // カテゴリを2つランダム付与
                 $catIds = Category::inRandomOrder()->limit(2)->pluck('id');
                 if ($catIds->isNotEmpty()) {
-                    $item->categories()->attach($catIds);
+                    $item->categories()->attach($catIds->all());
                 }
             }
         });

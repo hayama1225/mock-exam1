@@ -45,8 +45,8 @@ class ItemController extends Controller
             ->with(['categories', 'seller'])
             ->withCount(['likedByUsers as likes_count', 'comments']);
 
-        // 自分の出品は除外（ログイン時のみ）
-        if (Auth::check()) {
+        // 自分の出品も含めて表示（必要なときだけ ?hide_self=1 で除外）
+        if ($request->boolean('hide_self') && Auth::check()) {
             $query->where('seller_id', '!=', Auth::id());
         }
 
