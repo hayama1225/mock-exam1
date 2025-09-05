@@ -18,7 +18,6 @@ class ItemController extends Controller
 
         // マイリストタブ
         if ($tab === 'mylist') {
-            // 未認証は空表示
             if (!Auth::check()) {
                 $items = collect();
                 return view('items.index', compact('items', 'q', 'tab'));
@@ -35,8 +34,8 @@ class ItemController extends Controller
                 $query->where('name', 'LIKE', "%{$q}%");
             }
 
-            // マイリストは新着順
-            $items = $query->latest()->get();
+            // マイリストも昇順に戻す
+            $items = $query->orderBy('id', 'asc')->get();
             return view('items.index', compact('items', 'q', 'tab'));
         }
 
@@ -45,32 +44,19 @@ class ItemController extends Controller
             ->with(['categories', 'seller'])
             ->withCount(['likedByUsers as likes_count', 'comments']);
 
-        // 自分の出品も含めて表示（必要なときだけ ?hide_self=1 で除外）
         if ($request->boolean('hide_self') && Auth::check()) {
             $query->where('seller_id', '!=', Auth::id());
         }
 
-        // 検索（部分一致）
         if ($q !== '') {
             $query->where('name', 'LIKE', "%{$q}%");
         }
 
-        // ★ 未認証時の“おすすめ”並び
-        if (!Auth::check() && $q === '') {
-            // 未Sold優先 → いいね数多い順 → 新着順
-            $items = $query
-                ->orderByRaw('CASE WHEN buyer_id IS NULL THEN 0 ELSE 1 END') // 未Soldを先頭に
-                ->orderByDesc('likes_count')
-                ->orderByDesc('id')
-                ->get();
-        } else {
-            // それ以外（ログイン時 or 検索中）は新着順
-            $items = $query->latest()->get();
-        }
+        // ★ 常に昇順（Seederの順）
+        $items = $query->orderBy('id', 'asc')->get();
 
         return view('items.index', compact('items', 'q', 'tab'));
     }
-
 
     public function show(Item $item)
     {

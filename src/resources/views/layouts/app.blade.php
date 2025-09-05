@@ -30,26 +30,11 @@
 
                 {{-- クリアボタン（qだけ外して現在のtabは維持） --}}
                 @if(request()->filled('q'))
-                @php
-                $params = request()->has('tab') ? ['tab' => request('tab')] : [];
-                @endphp
+                @php $params = request()->has('tab') ? ['tab' => request('tab')] : []; @endphp
                 <a class="link muted" href="{{ route('items.index', $params) }}" style="margin-left:8px">× クリア</a>
                 @endif
             </form>
             @endunless
-
-            @if(request('tab'))
-            <input type="hidden" name="tab" value="{{ request('tab') }}">
-            @endif
-
-            {{-- クリアボタン（qだけ外して現在のtabは維持） --}}
-            @if(request()->filled('q'))
-            @php
-            $params = request()->has('tab') ? ['tab' => request('tab')] : [];
-            @endphp
-            <a class="link muted" href="{{ route('items.index', $params) }}" style="margin-left:8px">× クリア</a>
-            @endif
-            </form>
 
             <nav class="nav-right">
                 @auth

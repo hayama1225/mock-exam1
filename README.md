@@ -38,8 +38,14 @@ MailHog：http://localhost:8025/
 ログイン（Fortify）：http://localhost/login
 
 ### テストアカウント（Seeder投入後に使用可）
-メール: seed-seller@example.com
-パスワード: password123
+
+- 出品者デモ
+  **メール**: seed-seller@example.com / **パスワード**: password123
+  > このユーザーはシーディングで作成されたダミー商品（10件）の**所有者**です。
+
+- 一般ユーザー（登録推奨）
+  画面から新規ユーザー登録してください。
+  > 新規登録ユーザーは出品ゼロの状態で始まります（購入テスト用）。
 
 ### 参考メモ
 - docker-compose.yml の version 警告
