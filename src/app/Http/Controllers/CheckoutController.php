@@ -113,11 +113,13 @@ class CheckoutController extends Controller
 
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         $session = \Stripe\Checkout\Session::retrieve($sessionId);
+
+        // ここで必ず一度だけ生成
+        $meta = $session->metadata ?? new \stdClass(); # 新住所で購入した後の表示不具合対策
+
         $cd = $session->customer_details ?? null;
         $ad = $cd && isset($cd->address) ? $cd->address : null;
         if ($ad) {
-            $meta = $session->metadata ?? new \stdClass();
-
             if (empty($meta->ship_zip))  $meta->ship_zip  = $ad->postal_code ?? null;
             if (empty($meta->ship_addr)) $meta->ship_addr = trim(implode(' ', array_filter([
                 $ad->state ?? null,
@@ -126,7 +128,7 @@ class CheckoutController extends Controller
             ]))) ?: null;
             if (empty($meta->ship_bldg)) $meta->ship_bldg = $ad->line2 ?? null;
         }
-        $meta = $session->metadata ?? new \stdClass();
+
         $payMethod = $meta->pay_method ?? 'card';
 
         $itemId = (int)($meta->item_id ?? 0);
