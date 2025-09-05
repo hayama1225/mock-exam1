@@ -57,6 +57,39 @@ MailHog：http://localhost:8025/
 - MailHog 統一
     .env は MAIL_MAILER=smtp, MAIL_HOST=mailhog, MAIL_PORT=1025 に統一（mailpit の行があれば削除）。
 
+## 決済テスト手順（サンドボックス）
+
+本アプリは **Stripeのテストモード（サンドボックス）** を利用しています。
+実際に課金はされません。以下の手順で購入確認が可能です。
+
+1. Stripe のテストキーを .env に設定
+   ```env
+   STRIPE_KEY=pk_test_xxx
+   STRIPE_SECRET=sk_test_xxx
+   STRIPE_WEBHOOK_SECRET=whsec_xxx   # Stripe CLI で取得
+   STRIPE_CURRENCY=jpy
+
+2. 設定反映
+docker compose exec php bash -lc "php artisan config:clear"
+
+3. Stripe CLI を使って Webhook を転送
+```bash
+stripe login  # 初回だけ
+stripe listen --forward-to http://localhost/stripe/webhook
+```
+
+4. 表示された whsec_xxx を .env の STRIPE_WEBHOOK_SECRET に貼り付け
+
+5. テストカード番号例
+- 成功: 4242 4242 4242 4242 / 任意の未来日 / 任意CVC
+- 失敗: 4000 0000 0000 9995
+- コンビニ払い: 画面に表示される指示に従う
+
+6. 決済確認
+- 商品が「sold」になる
+- マイページ「購入した商品一覧」に表示される
+- ログに Skip purchases insert ... が出ないことを確認
+
 ## 使用技術（実行環境）
 - PHP 8.1.33
 - Laravel 10.48.29
