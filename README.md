@@ -68,24 +68,31 @@ MailHog：http://localhost:8025/
    STRIPE_SECRET=sk_test_xxx
    STRIPE_WEBHOOK_SECRET=whsec_xxx   # Stripe CLI で取得
    STRIPE_CURRENCY=jpy
+   ```
 
-2. 設定反映
+2. Stripe CLI を使って Webhook を転送
+  ```bash
+  stripe login  # 初回だけ
+  stripe listen --forward-to http://localhost/stripe/webhook
+  ```
+
+3. 表示された whsec_xxx を .env の STRIPE_WEBHOOK_SECRET に貼り付け
+
+4. サンドボックス ホーム画面：https://dashboard.stripe.com/login
+- **開発者**をクリック(画面左下)
+- **API キー**
+- **公開可能キーのトークン**を.envのSTRIPE_KEY=にコピペ
+- **シークレットキー**をSTRIPE_SECRET=にコピペ
+
+5. 設定反映
 docker compose exec php bash -lc "php artisan config:clear"
 
-3. Stripe CLI を使って Webhook を転送
-```bash
-stripe login  # 初回だけ
-stripe listen --forward-to http://localhost/stripe/webhook
-```
-
-4. 表示された whsec_xxx を .env の STRIPE_WEBHOOK_SECRET に貼り付け
-
-5. テストカード番号例
+6. テストカード番号例
 - 成功: 4242 4242 4242 4242 / 任意の未来日 / 任意CVC
 - 失敗: 4000 0000 0000 9995
 - コンビニ払い: 画面に表示される指示に従う
 
-6. 決済確認
+7. 決済確認
 - 商品が「sold」になる
 - マイページ「購入した商品一覧」に表示される
 - ログに Skip purchases insert ... が出ないことを確認
