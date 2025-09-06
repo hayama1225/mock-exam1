@@ -104,6 +104,13 @@ docker compose exec php bash -lc "php artisan config:clear"
 - nginx 1.21.1
 - MailHog v1.0.1（Docker）
 
+## テストについて
+`tests/Feature` にて各機能のテストコードを用意しています。
+php artisan test で一括実行可能です。
+
+※一部のテストは実装仕様との差により失敗表示となりますが、
+   実際のブラウザ動作はテストケース表どおりに確認済みです。
+
 ## ER図
 ```mermaid
 erDiagram
