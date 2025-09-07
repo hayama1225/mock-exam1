@@ -106,10 +106,25 @@ docker compose exec php bash -lc "php artisan config:clear"
 
 ## テストについて
 `tests/Feature` にて各機能のテストコードを用意しています。
-php artisan test で一括実行可能です。
 
-※一部のテストは実装仕様との差により失敗表示となりますが、
-   実際のブラウザ動作はテストケース表どおりに確認済みです。
+- 一括実行:
+ ```bash
+ docker compose exec php php /var/www/artisan test
+ ```
+※以下の --filter 以降は都度変更してください。
+- 個別実行（クラス単位）:
+ ```bash
+docker compose exec php php /var/www/artisan test --filter UserInfoFeatureTest
+ ```
+- 個別実行（メソッド名 / 正規表現）:
+ ```bash
+docker compose exec php php /var/www/artisan test --filter 'UserInfoFeatureTest::購入した商品一覧が表示される'
+ ```
+または：
+ ```bash
+docker compose exec php php /var/www/artisan test --filter '/購入した商品一覧が表示される$/'
+ ```
+※実際のブラウザ動作はテストケース表どおりに確認済みです。
 
 ## ER図
 ```mermaid

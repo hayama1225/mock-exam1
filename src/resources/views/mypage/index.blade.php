@@ -6,8 +6,26 @@
 <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
 @endpush
 
-
 @section('content')
+@php
+// ★ コントローラから渡っていなくても落ちないようにフォールバック
+/** @var \App\Models\User|null $user */
+$user = $user ?? auth()->user();
+
+// タブ：未指定なら購入一覧（buy）をデフォルト
+$tab = $tab ?? request('tab', 'buy');
+
+// 出品一覧フォールバック
+$items = $items ?? ($user
+? $user->items()->orderBy('id','asc')->get()
+: collect());
+
+// 購入一覧フォールバック（purchases 経由で item を表示）
+$purchases = $purchases ?? ($user
+? \App\Models\Purchase::with('item')->where('buyer_id', $user->id)->orderBy('id','asc')->get()
+: collect());
+@endphp
+
 {{-- プロフィールヘッダ --}}
 @php
 $avatar = optional($user->profile)->avatar_path;
@@ -25,8 +43,9 @@ $email = $user->email; // メールを表示
 
     <div class="profile-main">
         <div class="profile-info">
+            <div class="muted">ユーザー名</div>
             <div class="profile-name">{{ $displayName }}</div>
-            <div class="profile-address">{{ $email }}</div> {{-- ← ここをメールに固定 --}}
+            <div class="profile-address">{{ $email }}</div>
         </div>
 
         <div class="profile-actions">
@@ -35,9 +54,7 @@ $email = $user->email; // メールを表示
     </div>
 </div>
 
-
 {{-- タブ --}}
-@php $tab = $tab ?? request('tab', 'buy'); @endphp
 <div class="tabs">
     <a href="{{ route('mypage.index', ['tab'=>'buy']) }}" class="tab-link {{ $tab==='buy'  ? 'active' : '' }}">購入した商品一覧</a>
     <a href="{{ route('mypage.index', ['tab'=>'sell']) }}" class="tab-link {{ $tab==='sell' ? 'active' : '' }}">出品した商品一覧</a>

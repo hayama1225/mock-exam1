@@ -29,7 +29,7 @@
             <button type="submit" class="linklike">認証メールを再送する</button>
         </form>
 
-        <p class="note">※ 別タブで「Verify Email Address」をクリックすると、自動でトップページへ移動します。</p>
+        <p class="note">※ 別タブで「Verify Email Address」をクリックすると、自動でプロフィール設定ページへ移動します。</p>
     </main>
 
     <script>
@@ -41,7 +41,7 @@
                 if (!res.ok) return;
                 const data = await res.json();
                 if (data.verified) {
-                    window.location.replace("{{ url('/') }}");
+                    window.location.replace("{{ route('profile.edit') }}");
                 }
             } catch (_) {}
         }

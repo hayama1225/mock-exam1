@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Http\Controllers\{
     ProfileController,
     ItemController,
@@ -101,7 +102,7 @@ Route::view('/home', 'auth.verified-close')->name('home');
 
 // 認証状態の簡易チェックAPI（要ログイン）
 Route::middleware('auth')->get('/email/verified-check', function () {
-    return response()->json([
-        'verified' => auth()->user()->hasVerifiedEmail(),
-    ]);
+    $u = auth()->user();
+    $verified = $u instanceof MustVerifyEmail ? $u->hasVerifiedEmail() : false;
+    return response()->json(['verified' => $verified]);
 });
