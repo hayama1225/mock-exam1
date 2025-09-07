@@ -73,6 +73,8 @@ MailHog：http://localhost:8025/
 2. Stripe CLI を使って Webhook を転送
   ```bash
   stripe login  # 初回だけ
+  ```
+  ```bash
   stripe listen --forward-to http://localhost/stripe/webhook
   ```
 
