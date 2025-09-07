@@ -26,7 +26,7 @@ class StripeWebhookController extends Controller
 
         switch ($event->type) {
             case 'checkout.session.completed': {
-                    $session = $event->data->object; // \Stripe\Checkout\Session
+                    $session = $event->data->object;
                     Log::info('checkout.session.completed', [
                         'session'        => $session->id,
                         'payment_intent' => $session->payment_intent,
@@ -36,13 +36,11 @@ class StripeWebhookController extends Controller
                     break;
                 }
 
-                // ★カード/コンビニとも最終確定で飛ぶ
             case 'payment_intent.succeeded': {
-                    $pi   = $event->data->object; // \Stripe\PaymentIntent
+                    $pi   = $event->data->object;
                     $piId = $pi->id;
 
-                    // metadata を取得（無ければ Session 逆引き）
-                    $meta = $pi->metadata ?? [];
+                    $meta = (array)($pi->metadata ?? []);
                     if (!isset($meta['item_id'])) {
                         try {
                             $sessions = \Stripe\Checkout\Session::all([
@@ -50,7 +48,7 @@ class StripeWebhookController extends Controller
                                 'limit'          => 1,
                             ]);
                             if (!empty($sessions->data)) {
-                                $meta = $sessions->data[0]->metadata ?? [];
+                                $meta = (array)($sessions->data[0]->metadata ?? []);
                             }
                         } catch (\Throwable $e) {
                             Log::warning('Failed to fetch session by PI', ['pi' => $piId, 'err' => $e->getMessage()]);
@@ -61,18 +59,13 @@ class StripeWebhookController extends Controller
                     break;
                 }
 
-                // ★非同期支払い（コンビニ等）で飛ぶことがある → 同じく確定処理
             case 'checkout.session.async_payment_succeeded': {
-                    $session = $event->data->object; // \Stripe\Checkout\Session
-
-                    // まず Session の metadata を使う
+                    $session = $event->data->object;
                     $meta = (array)($session->metadata ?? []);
-                    // 不足があれば PI から補完
                     if (!isset($meta['item_id']) || !$meta['item_id']) {
                         try {
                             $pi = \Stripe\PaymentIntent::retrieve($session->payment_intent);
-                            $piMeta = (array)($pi->metadata ?? []);
-                            $meta = array_merge($piMeta, $meta);
+                            $meta = array_merge((array)($pi->metadata ?? []), $meta);
                         } catch (\Throwable $e) {
                             Log::warning('Failed to fetch PI for async_session', ['session' => $session->id, 'err' => $e->getMessage()]);
                         }
@@ -86,9 +79,6 @@ class StripeWebhookController extends Controller
         return response('OK', 200);
     }
 
-    /**
-     * metadata から Item/Purchase を確定更新
-     */
     private function finalizeFromMeta(array $meta, string $status): void
     {
         $itemId    = isset($meta['item_id'])  ? (int)$meta['item_id']  : 0;
@@ -111,13 +101,11 @@ class StripeWebhookController extends Controller
             return;
         }
 
-        // items を SOLD に
         if ($buyerId && Schema::hasColumn('items', 'buyer_id')) $item->buyer_id = $buyerId;
         if (Schema::hasColumn('items', 'sold_at'))              $item->sold_at  = now();
         if (Schema::hasColumn('items', 'is_sold'))              $item->is_sold  = true;
         $item->save();
 
-        // purchases を住所込みで Upsert（テーブルに合わせて安全に）
         $this->upsertPurchaseWithAddress(
             $item,
             $buyerId,
@@ -163,8 +151,10 @@ class StripeWebhookController extends Controller
         if (Schema::hasColumn('purchases', 'address'))  $vals['address']  = $address ?? '';
         if (Schema::hasColumn('purchases', 'building')) $vals['building'] = $building ?? '';
 
-        if (Schema::hasColumn('purchases', 'quantity'))   $vals['quantity']   = $quantity;
-        if (Schema::hasColumn('purchases', 'pay_method')) $vals['pay_method'] = $payMethod ?? '';
+        if (Schema::hasColumn('purchases', 'quantity'))        $vals['quantity']        = $quantity;
+        // FIX: payment_method にも対応
+        if (Schema::hasColumn('purchases', 'payment_method'))  $vals['payment_method']  = $payMethod ?? '';
+        if (Schema::hasColumn('purchases', 'pay_method'))      $vals['pay_method']      = $payMethod ?? '';
         if ($status === 'paid' && Schema::hasColumn('purchases', 'paid_at')) {
             $vals['paid_at'] = now();
         }
